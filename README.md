@@ -2,7 +2,7 @@
 ## Of the 11 challenges we had to deal with, I succeeded in 9. The 2 challenges I couldn't solve are :
 * 7 Tropical Fruits
 * Nurxxed
-## So I'm going to explain step by step how I captured the flag for the 8 challenges I successfully completed.
+## So I'm going to explain step by step how I captured the flag for the 9 challenges I successfully completed.
 #
 > To start with, I create an SSH account and then connect to the account I've just created by using a terminal.
 # 1. The Beginning
