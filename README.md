@@ -18,7 +18,7 @@ cd /home/level/
 ```
 ls -al
 ```
-> Linux **_ls -a command_**, show all files and subdirectories in the current directory, including hidden files and **_ls -l command_**, display detailed information of non-hidden files and directories
+> Linux `ls -a command`, show all files and subdirectories in the current directory, including hidden files and `ls -l command`, display detailed information of non-hidden files and directories
 #### Then I go to the 00_welcome folder, where there's a README.md file in which the first password is stored
 ```
 cd 00_welcome/
@@ -87,7 +87,7 @@ cat README.md
 ``` C
 ./charp "solution.txt; cat solution.txt> ~/expected.txt"
 ```
-> * **./charp** is a command line instruction for a C program
+> * `./charp` is a command line instruction for a C program
 > * This command will run the **charp** program with **solution.txt** as an argument and write it's contents to a file named **expected.txt** in  home directory.
 #### After executing this I return go to the home directory :
 ```
@@ -108,10 +108,10 @@ ln -s /bin/sh ~/wc
 ``` 
 PATH=~ ./charp2 "/bin/cat solution.txt 1>&2"
 ```
-> * The **ln** command creates a symbolic link named **wc** in home directory that points to the /bin/sh file.
+> * The `ln` command creates a symbolic link named **wc** in home directory that points to the /bin/sh file.
 > * The charp2 is a C program that reads a command from the standard input and executes it using the shell interpreter.
 > * The PATH environment variable is set to the current directory, and then the charp2 program is executed with the arguments "/bin/cat solution.txt 1>&2".
-> * The "/bin/cat solution.txt 1>&2" argument specifies that the **cat** command should be executed with the *solution.txt* file as input and the output should be redirected to the standard error stream. The 1>&2 redirection operator redirects the standard output stream to the standard error stream.
+> * The "/bin/cat solution.txt 1>&2" argument specifies that the `cat` command should be executed with the *solution.txt* file as input and the output should be redirected to the standard error stream. The 1>&2 redirection operator redirects the standard output stream to the standard error stream.
 # 4. Py-Tong
 > This is the level 12 found in /home/level/12_pytong/
 ### how i solved this level?
@@ -133,7 +133,7 @@ done
 ```
 touch new
 ```
->la commande **touch**peut être utilisée pour créer un fichier vide sans contenu(avec Linux).
+>la commande `touch` peut être utilisée pour créer un fichier vide sans contenu(avec Linux).
 * Once the empty file has been created, I can use the command to run the script :
 ```
 ./test.sh
@@ -142,10 +142,13 @@ touch new
 ```
 ./pytong /home/user/username/new
 ```
-# 5. Tryouts
+# 5. Live LFI
+# 6. Live LFI
+
+# 7. Tryouts
 > Find in /home/level/matrixman/13_tryouts
-* In /home/level/matrixman/13_tryouts, there's a C language code called tryouts.c and its compiled version tryouts. There's also a solution.txt file that we don't have access to.
-* The **tryouts.c** file asks us to guess a random number generated using /dev/urandom
+> * In /home/level/matrixman/13_tryouts, there's a C language code called tryouts.c and its compiled version tryouts. There's also a solution.txt file that we don't have access to.
+> * The **tryouts.c** file asks us to guess a random number generated using /dev/urandom
 ### For this Level to get the flag, I used the following strategy: 
 * First, I create a file called cat.c
 ```
@@ -171,9 +174,18 @@ return 0;
 ```
 gcc -m32 cat.c -o cat
 ```
-* Then let's run this program, specifying the output file in which to write the contents of solution.txt
+* Let's run this program, specifying the output file in which to write the contents of solution.txt
 > The output file was created in advance with ` touch seed `
 ```
 ./cat seed
 ```
-* We've called this program **cat** because we want the system to use it instead of the **_default cat command_**, which displays the contents of a file. To do this, we'll use the following command, which will modify the environment variables:
+* We've called this program **cat** to use it instead of the **_default cat command_**, which displays the contents of a file. To do this, we'll modify the environment variables :
+```
+export PATH=$HOME:$PATH
+```
+> The program will use our cat because of the modified order in the PATH, and so the contents of solution.txt will be written to the file specified when our cat is run (in the seed file).
+* Finally, we run tryouts `./tryouts`. And then, restore the default environment variables with the following command:
+```
+export PATH=$PATH
+```
+* The password has now been placed in the file where we put the contents of solution.txt, so the flag for this level is available/readable in the file named seed in the home directory.
